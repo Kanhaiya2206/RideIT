@@ -7,7 +7,6 @@ import { getAllCars } from "../redux/actions/carsActions";
 import moment from "moment";
 import { bookCar } from "../redux/actions/bookingActions";
 import StripeCheckout from "react-stripe-checkout";
-import AOS from 'aos';
 
 import 'aos/dist/aos.css'; // You can also use <link> for styles
 const { RangePicker } = DatePicker;
@@ -24,19 +23,19 @@ function BookingCar({ match }) {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    if (cars.length == 0) {
+    if (cars.length === 0) {
       dispatch(getAllCars());
     } else {
-      setcar(cars.find((o) => o._id == match.params.carid));
+      setcar(cars.find((o) => o._id === match.params.carid));
     }
-  }, [cars]);
+  }, [cars, dispatch, match.params.carid]);
 
   useEffect(() => {
     setTotalAmount(totalHours * car.rentPerHour);
     if (driver) {
       setTotalAmount(totalAmount + 50 * totalHours);
     }
-  }, [driver, totalHours]);
+  }, [car.rentPerHour, driver, totalAmount, totalHours]);
 
   function selectTimeSlots(values) {
     setFrom(moment(values[0]).format("MMM DD yyyy HH:mm"));
@@ -73,7 +72,7 @@ function BookingCar({ match }) {
         style={{ minHeight: "90vh" }}
       >
         <Col lg={10} sm={24} xs={24} className='p-3'>
-          <img src={car.image} className="carimg2 bs1 w-100" data-aos='flip-left' data-aos-duration='1500'/>
+          <img src={car.image} className="carimg2 bs1 w-100" data-aos='flip-left' data-aos-duration='1500' alt="car"/>
         </Col>
 
         <Col lg={10} sm={24} xs={24} className="text-right">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import DefaultLayout from "../components/DefaultLayout";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllBookings } from "../redux/actions/bookingActions";
@@ -12,7 +12,7 @@ function UserBookings() {
   const user = JSON.parse(localStorage.getItem("user"));
   useEffect(() => {
     dispatch(getAllBookings());
-  }, []);
+  }, [dispatch]);
 
   return (
     <DefaultLayout>
@@ -22,7 +22,7 @@ function UserBookings() {
       <Row justify="center" gutter={16}>
         <Col lg={16} sm={24}>
          
-            {bookings.filter(o=>o.user==user._id).map((booking) => {
+            {bookings.filter(o=>o.user===user._id).map((booking) => {
              return <Row gutter={16} className="bs1 mt-3 text-left">
                 <Col lg={6} sm={24}>
                     <p><b>{booking.car.name}</b></p>
@@ -39,7 +39,7 @@ function UserBookings() {
                 </Col>
 
                 <Col lg={6} sm={24} className='text-right'>
-                    <img style={{borderRadius:5}} src={booking.car.image}  height="140" className="p-2"/>
+                    <img style={{borderRadius:5}} src={booking.car.image}  height="140" className="p-2" alt="car"/>
                 </Col>
               </Row>;
             })}

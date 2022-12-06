@@ -22,6 +22,7 @@ function Register() {
       <Row gutter={16} className="d-flex align-items-center">
         <Col lg={16} style={{ position: "relative" }}>
           <img 
+          alt="logo"
            className='w-100'
            data-aos='slide-left'
            data-aos-duration='1500'
