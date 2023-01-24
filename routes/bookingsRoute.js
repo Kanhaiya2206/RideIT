@@ -9,13 +9,32 @@ const stripe = require("stripe")(
 router.post("/bookcar", async (req, res) => {
   const { token } = req.body;
   try {
-   
+    const customer = await stripe.customers.create({
+      email: token.email,
+      source: token.id,
+    });
+
+    const payment = await stripe.charges.create(
+      {
+        amount: req.body.totalAmount * 100,
+        currency: "usd",
+        customer: customer.id,
+        receipt_email: token.email
+      },
+      {
+        idempotencyKey: uuidv4(),
+        
+      }
+    );
+
     // const paymentIntent = await stripe.paymentIntents.create({
     //   amount: req.body.totalAmount * 100,
     //   currency: 'usd',
     //   payment_method_types: ['card'],
     // });
-      req.body.transactionId = uuidv4()
+
+    if (paymentIntent) {
+      req.body.transactionId = payment.source.id;
       const newbooking = new Booking(req.body);
       await newbooking.save();
       const car = await Car.findOne({ _id: req.body.car });
@@ -23,8 +42,10 @@ router.post("/bookcar", async (req, res) => {
       car.bookedTimeSlots.push(req.body.bookedTimeSlots);
 
       await car.save();
-      console.log("kk");
       res.send("Your booking is successfull");
+    } else {
+      return res.status(400).json(error);
+    }
   } catch (error) {
     console.log(error);
     return res.status(400).json(error);

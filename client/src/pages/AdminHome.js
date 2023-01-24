@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import DefaultLayout from "../components/DefaultLayout";
 import { deleteCar, getAllCars } from "../redux/actions/carsActions";
-import { Col, Row } from "antd";
+import { Col, Row, Divider, DatePicker, Checkbox, Edit } from "antd";
 import { Link } from "react-router-dom";
 import Spinner from "../components/Spinner";
+import moment from "moment";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Popconfirm } from "antd";
+import { Popconfirm, message } from "antd";
+const { RangePicker } = DatePicker;
 function AdminHome() {
   const { cars } = useSelector((state) => state.carsReducer);
   const { loading } = useSelector((state) => state.alertsReducer);
@@ -15,7 +17,7 @@ function AdminHome() {
 
   useEffect(() => {
     dispatch(getAllCars());
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     setTotalcars(cars);
@@ -34,14 +36,14 @@ function AdminHome() {
         </Col>
       </Row>
 
-      {loading === true && <Spinner />}
+      {loading == true && <Spinner />}
 
       <Row justify="center" gutter={16}>
         {totalCars.map((car) => {
           return (
             <Col lg={5} sm={24} xs={24}>
               <div className="car p-2 bs1">
-                <img src={car.image} className="carimg" alt="car" />
+                <img src={car.image} className="carimg" />
 
                 <div className="car-content d-flex align-items-center justify-content-between">
                   <div className="text-left pl-2">
